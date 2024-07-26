@@ -32,7 +32,7 @@ var prompts = kernel.ImportPluginFromPromptDirectory("prompts/emails");
 var web_search_result = await kernel.InvokeAsync<string>("SearchPlugin", 
     "web_football_match_search",
     new() {
-        { "footballTeam", "Welling United" }
+        { "football_team", "Welling United" }
     });
 
 Console.WriteLine(web_search_result);

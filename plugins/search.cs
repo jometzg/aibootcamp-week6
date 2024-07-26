@@ -14,7 +14,7 @@ public class SearchPlugin
     [KernelFunction("web_football_match_search")]
     [Description("Gets information that contains the next match date and time for the a passed football team.")]
     [return: Description("Information that contains the next match date and time for the a passed football team.")]
-    public async Task<string> WebSearch([Description("The football team")] string footballTeam)
+    public async Task<string> WebSearch([Description("The football team")] string football_team)
     {
         // CHALLENGE 2.1
         // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
@@ -25,7 +25,7 @@ public class SearchPlugin
         kernel.ImportPluginFromObject(new WebSearchEnginePlugin(bingConnector), "bing");
 
         var function = kernel.Plugins["bing"]["search"];
-        var bingResult = await kernel.InvokeAsync(function, new() { ["query"] = "When is the next "+ footballTeam + " football match?" });
+        var bingResult = await kernel.InvokeAsync(function, new() { ["query"] = "When is the next "+ football_team + " football match?" });
         return bingResult.ToString();
     }
 }
