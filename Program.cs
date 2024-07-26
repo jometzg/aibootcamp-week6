@@ -20,7 +20,6 @@ var kernel = builder.Build();
 // import plugins
 kernel.ImportPluginFromType<SearchPlugin>();
 kernel.ImportPluginFromType<ConversationSummaryPlugin>();
-var plugins = kernel.ImportPluginFromPromptDirectory("plugins");
 var prompts = kernel.ImportPluginFromPromptDirectory("prompts/emails");
 //-------------------------------
 
