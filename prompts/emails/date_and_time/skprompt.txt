@@ -1,0 +1,8 @@
+<message role="system">Given the following user context returned from a web search, identify the date and time of the next 
+football match for a specified football team and return only the date and time in the following format "Friday 26th July at 14.00"</message>
+
+for example:
+<message role="user">The next Manchester United match is 26/07/2024 14.45</message>
+<message role="assistant">Friday 26th July 14.45</message>
+
+<message role="user">{{$web_search_result}}</message>
