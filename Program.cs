@@ -29,7 +29,7 @@ var prompts = kernel.ImportPluginFromPromptDirectory("prompts/emails");
 // https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-native-plugins?pivots=programming-language-csharp
 // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
 // and sport] game in order to be integrated in the email.
-var web_search_result = await kernel.InvokeAsync("SearchPlugin", 
+var web_search_result = await kernel.InvokeAsync<string>("SearchPlugin", 
     "web_football_match_search",
     new() {
         { "footballTeam", "Welling United" }
