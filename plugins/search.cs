@@ -21,7 +21,7 @@ public class SearchPlugin
         // and sport] game in order to be integrated in the email.
         var kernel = Kernel.CreateBuilder().Build();
         
-        var bingConnector = new BingConnector("c84d398c0c9742b09e180f8a46322d9c");
+        var bingConnector = new BingConnector("<YOUR_BING_API_KEY>");
         kernel.ImportPluginFromObject(new WebSearchEnginePlugin(bingConnector), "bing");
 
         var function = kernel.Plugins["bing"]["search"];
