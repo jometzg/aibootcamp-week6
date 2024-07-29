@@ -97,7 +97,7 @@ async Task<string> ExecuteWithFunctions()
 {
     var email = string.Empty;
 
-    Console.WriteLine("What do you want to do?");
+    Console.WriteLine("What do you want to do? (e.g. 'write an excuse email')");
     var input = Console.ReadLine();
 
     var intent = await kernel.InvokeAsync<string>(
