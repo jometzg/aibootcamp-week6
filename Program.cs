@@ -89,6 +89,7 @@ async Task<string> GetExcuseEmail(string day_and_time)
 
 
 // https://learn.microsoft.com/en-us/training/modules/guided-project-create-ai-travel-agent/1-introduction
+// Get intent from the user and execute based on functions
 async Task<string> ExecuteWithFunctions()
 {
     var email = string.Empty;
@@ -120,8 +121,8 @@ async Task<string> ExecuteWithFunctions()
 }
 
 
-// Create an execution plan using Intelligent Planners
 // https://learn.microsoft.com/en-us/training/modules/use-intelligent-planners/1-introduction
+// Create an execution plan using Intelligent Planners
 async Task<string> ExecuteWithIntelligentPlanners()
 {
     var planner = new HandlebarsPlanner(new HandlebarsPlannerOptions() { AllowLoops = true });
