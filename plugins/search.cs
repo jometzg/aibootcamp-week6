@@ -16,7 +16,6 @@ public class SearchPlugin
     [return: Description("Information that contains the next match date and time for the a passed football team.")]
     public async Task<string> WebSearch([Description("The football team")] string football_team)
     {
-        // CHALLENGE 2.1
         // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
         // and sport] game in order to be integrated in the email.
         var kernel = Kernel.CreateBuilder().Build();

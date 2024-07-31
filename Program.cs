@@ -40,7 +40,6 @@ var excuse_email3 = await ExecuteWithIntelligentPlanners();
 
 
 #region Functions
-// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-native-plugins?pivots=programming-language-csharp
 // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
 // and sport] game in order to be integrated in the email.
@@ -57,7 +56,6 @@ async Task<string> SearchWebForFootballMatchDateAndTime(string football_team = "
 }
 
 
-// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
 // Write a semantic function that gets the date and time of the next Manchester United football match. 
 //The function takes as input web search results for the next Manchester United football match.
@@ -74,7 +72,6 @@ async Task<string> GetMatchDateAndTime(string web_search_result)
 }
 
 
-// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
 // Write a semantic function that generates an excuse email for your boss to avoid work and watch the next [your favorite team and sport] game. 
 //The function takes as input the day and time of the game, which you provide manually.
@@ -91,7 +88,6 @@ async Task<string> GetExcuseEmail(string day_and_time)
 }
 
 
-// CHALLENGE 2.2
 // https://learn.microsoft.com/en-us/training/modules/guided-project-create-ai-travel-agent/1-introduction
 async Task<string> ExecuteWithFunctions()
 {
@@ -124,7 +120,6 @@ async Task<string> ExecuteWithFunctions()
 }
 
 
-// CHALLENGE 2.2+
 // Create an execution plan using Intelligent Planners
 // https://learn.microsoft.com/en-us/training/modules/use-intelligent-planners/1-introduction
 async Task<string> ExecuteWithIntelligentPlanners()
