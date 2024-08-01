@@ -34,7 +34,7 @@ public class BookingsPlugin //JM+
     [KernelFunction("web_restaurant_add_booking")]
     [Description("Gets information that contains suitable restaurnats near my location that have the right cuisine type.")]
     [return: Description("Information that contains a list of potential restaurants that meet the criteria.")]
-    public async Task<BookingModel> WebAddBooking([Description("The restaurant")] string restaurant,
+    public async Task<string> WebAddBooking([Description("The restaurant")] string restaurant,
                                         [Description("The date of booking")] string date_booking,
                                         [Description("The time of booking")] string time_booking,
                                         [Description("The number of people")] int number_of_people,
@@ -54,18 +54,18 @@ public class BookingsPlugin //JM+
             CustomerEmail = customer_email
         };
         _bookings.Add(booking);
-        return booking;
+        return JsonConvert.SerializeObject(booking);
     }
-
-    [KernelFunction("web_restaurant_get_booking")]
+  
+   [KernelFunction("web_restaurant_get_booking")]
     [Description("Gets the details of a booking for a restaurant when given the booking id.")]
     [return: Description("Information about the booking.")]
-    public async Task<BookingModel> WebGetBooking([Description("The booking id")] int booking_id)
+    public async Task<string> WebGetBooking([Description("The booking id")] int booking_id)
     {
         // CHALLENGE 2.3
         // Write a native function that gets a booking for a restaurant.
         var booking = _bookings.FirstOrDefault(b => b.Id == booking_id);
-        return booking;
+        return JsonConvert.SerializeObject(booking);
     }
 
     [KernelFunction("web_restaurant_delete_bookings")]
