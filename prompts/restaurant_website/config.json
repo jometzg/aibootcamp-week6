@@ -1,0 +1,18 @@
+{
+    "schema": 1,
+    "type": "completion",
+    "description": "Identify the website name of the restaurant the user is looking for",
+    "execution_settings": {
+        "default": {
+            "max_tokens": 100,
+            "temperature": 0.1
+        }
+    },
+    "input_variables": [
+        {
+            "name": "restaurant_search_results",
+            "description": "The search results from the Bing request",
+            "required": true
+        }
+    ]
+}
