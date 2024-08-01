@@ -1,0 +1,11 @@
+<message role="system">Given the following user context returned from a web search, identify website name of the restaurant in the first returned result. If there is no website assume the restaurant website is that of the name with .com at the end. Only return the website name</message>
+
+for example:
+<message role="user">The dilshad restaurant bookings can be done at https:///dilshadbookings.com</message>
+<message role="assistant">https:///dilshadbookings.com</message>
+
+<message role="user">The dilshad restaurant </message>
+<message role="assistant">https:///dilshad.com</message>
+
+
+<message role="user">{{$restaurant_search_results}}</message>
