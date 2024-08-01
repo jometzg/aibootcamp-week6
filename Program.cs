@@ -31,13 +31,14 @@ var prompts = kernel.ImportPluginFromPromptDirectory("C:\\dev\\sk-learn\\aibootc
 //var web_search_result = await SearchWebForFootballMatchDateAndTime();
 var web_search_result = await SearchRestaurantNearMe();
 var website_name = await GetRestaurantWebsite(web_search_result);
-BookingModel add_booking_result = await WebAddBooking(website_name = website_name );
-var email_body = await GenerateConfirmationEmail(add_booking_result.RestaurantName, 
-                                                add_booking_result.BookingDate,
-                                                add_booking_result.BookingTime,
-                                                add_booking_result.NumberOfPeople,
-                                                add_booking_result.CustomerName,
-                                                add_booking_result.CustomerEmail);
+var add_booking_result = await WebAddBooking(website_name = website_name );
+BookingModel booking = JsonConvert.DeserializeObject<BookingModel>(add_booking_result);
+var email_body = await GenerateConfirmationEmail(booking.RestaurantName, 
+                                                booking.BookingDate,
+                                                booking.BookingTime,
+                                                booking.NumberOfPeople,
+                                                booking.CustomerName,
+                                                booking.CustomerEmail);
 //var day_and_time = await GetMatchDateAndTime(web_search_result);
 //var excuse_email1 = await GetExcuseEmail(day_and_time);
 
@@ -85,7 +86,7 @@ async Task<string> GetRestaurantWebsite(string web_search_result)
 
 // CHALLENGE 2.3 JM+
 // booking a restaurant
-async Task<BookingModel> WebAddBooking(string restaurant_name = "Dilshad", 
+async Task<string> WebAddBooking(string restaurant_name = "Dilshad", 
                                 string booking_date = "20th September 2022",
                                 string booking_time = "19:00",
                                 int number_of_people = 2,
@@ -102,16 +103,15 @@ async Task<BookingModel> WebAddBooking(string restaurant_name = "Dilshad",
         { "customer_name", customer_name },
         { "customer_email", customer_email }
     });
-    BookingModel deserializedObject = JsonConvert.DeserializeObject<BookingModel>(web_add_booking_result);
-    Console.WriteLine(web_search_result);
-    return deserializedObject;
+    Console.WriteLine(web_add_booking_result);
+    return web_add_booking_result;
 }
 
 
-// CHALLENGE 2.2 JM+
+// CHALLENGE 2.4 JM+
 // https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
-// Write a semantic function that gets the date and time of the next Manchester United football match. 
-//The function takes as input web search results for the next Manchester United football match.
+// Write a semantic function that generates a confirmation email for a restaurant booking. 
+//The function takes as the booking details.
 async Task<string> GenerateConfirmationEmail(string restaurant_name,
                                             string booking_date,
                                             string booking_time,
