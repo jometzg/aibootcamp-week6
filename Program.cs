@@ -21,6 +21,8 @@ var kernel = builder.Build();
 // import plugins
 kernel.ImportPluginFromType<SearchPlugin>();
 kernel.ImportPluginFromType<BookingsPlugin>(); //JM+
+kernel.ImportPluginFromType<DraftEmailPlugin>(); //JM+
+kernel.ImportPluginFromType<SendEmailPlugin>(); //JM+
 kernel.ImportPluginFromType<ConversationSummaryPlugin>();
 var prompts = kernel.ImportPluginFromPromptDirectory("C:\\dev\\sk-learn\\aibootcamp-week6\\prompts");
 //-------------------------------
@@ -39,6 +41,8 @@ var email_body = await GenerateConfirmationEmail(booking.RestaurantName,
                                                 booking.NumberOfPeople,
                                                 booking.CustomerName,
                                                 booking.CustomerEmail);
+var email_send_response = await SendConfirmationEmail(email_body, booking.CustomerEmail);
+
 //var day_and_time = await GetMatchDateAndTime(web_search_result);
 //var excuse_email1 = await GetExcuseEmail(day_and_time);
 
@@ -133,6 +137,24 @@ async Task<string> GenerateConfirmationEmail(string restaurant_name,
     return email_body;
 }
 
+// CHALLENGE 2.4 JM+
+// https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
+// Write a semantic function that generates a confirmation email for a restaurant booking. 
+//The function takes as the booking details.
+async Task<string> SendConfirmationEmail(string email_details, string customer_email)
+{
+    var email_send_response = await kernel.InvokeAsync<string>("SendEmailPlugin", 
+    "web_send_email",
+    new() {
+            { "email_address", customer_email },
+            { "email_details", email_details }
+        }
+    );
+
+    Console.WriteLine(email_send_response);
+    return email_send_response;
+}
+    
 // CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-native-plugins?pivots=programming-language-csharp
 // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
