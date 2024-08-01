@@ -1,10 +1,10 @@
-﻿#pragma warning disable SKEXP0050
+#pragma warning disable SKEXP0050
 #pragma warning disable SKEXP0060
-
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.Planning.Handlebars;
+using Newtonsoft.Json;
 
 
 // Create a new kernel
@@ -20,26 +20,120 @@ var kernel = builder.Build();
 //-------------------------------
 // import plugins
 kernel.ImportPluginFromType<SearchPlugin>();
+kernel.ImportPluginFromType<BookingsPlugin>(); //JM+
 kernel.ImportPluginFromType<ConversationSummaryPlugin>();
-var prompts = kernel.ImportPluginFromPromptDirectory("prompts");
+var prompts = kernel.ImportPluginFromPromptDirectory("C:\\dev\\sk-learn\\aibootcamp-week6\\prompts");
 //-------------------------------
 
 
 //-------------------------------
 // execute chained plugins
-var web_search_result = await SearchWebForFootballMatchDateAndTime();
-var day_and_time = await GetMatchDateAndTime(web_search_result);
-var excuse_email1 = await GetExcuseEmail(day_and_time);
+//var web_search_result = await SearchWebForFootballMatchDateAndTime();
+var web_search_result = await SearchRestaurantNearMe();
+var website_name = await GetRestaurantWebsite(web_search_result);
+BookingModel add_booking_result = await WebAddBooking(website_name = website_name );
+var email_body = await GenerateConfirmationEmail(add_booking_result.RestaurantName, 
+                                                add_booking_result.BookingDate,
+                                                add_booking_result.BookingTime,
+                                                add_booking_result.NumberOfPeople,
+                                                add_booking_result.CustomerName,
+                                                add_booking_result.CustomerEmail);
+//var day_and_time = await GetMatchDateAndTime(web_search_result);
+//var excuse_email1 = await GetExcuseEmail(day_and_time);
 
 //execute with functions
-var excuse_email2 = await ExecuteWithFunctions();
+//var excuse_email2 = await ExecuteWithFunctions();
 
 //  execute with intelligent planners 
-var excuse_email3 = await ExecuteWithIntelligentPlanners();
+//var excuse_email3 = await ExecuteWithIntelligentPlanners();
 //-------------------------------
 
 
 #region Functions
+// CHALLENGE 2.2 JM+
+// https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-native-plugins?pivots=programming-language-csharp
+// Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
+// and sport] game in order to be integrated in the email.
+async Task<string> SearchRestaurantNearMe(string cuisine = "Indian", string location = "TF10 7XN")
+{
+    var web_search_result = await kernel.InvokeAsync<string>("BookingsPlugin", 
+    "web_restaurant_search",
+    new() {
+        { "cuisine", cuisine },
+        { "location", location }
+    });
+
+    Console.WriteLine(web_search_result);
+    return web_search_result;
+}
+
+// CHALLENGE 2.2 JM+
+// https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
+// Write a semantic function that gets the date and time of the next Manchester United football match. 
+//The function takes as input web search results for the next Manchester United football match.
+async Task<string> GetRestaurantWebsite(string web_search_result)
+{
+    var website_name = await kernel.InvokeAsync<string>(prompts["restaurant_website"],
+    new() {
+            { "restaurant_search_results", web_search_result }
+        }
+    );
+
+    Console.WriteLine(website_name);
+    return website_name;
+}
+
+// CHALLENGE 2.3 JM+
+// booking a restaurant
+async Task<BookingModel> WebAddBooking(string restaurant_name = "Dilshad", 
+                                string booking_date = "20th September 2022",
+                                string booking_time = "19:00",
+                                int number_of_people = 2,
+                                string customer_name = "John Doe",
+                                string customer_email = "john.doe@gmail.com")
+{
+    var web_add_booking_result = await kernel.InvokeAsync<string>("BookingsPlugin", 
+    "web_restaurant_add_booking",
+    new() {
+        { "restaurant", restaurant_name },
+        { "date_booking", booking_date },
+        { "time_booking", booking_time },
+        { "number_of_people", number_of_people },
+        { "customer_name", customer_name },
+        { "customer_email", customer_email }
+    });
+    BookingModel deserializedObject = JsonConvert.DeserializeObject<BookingModel>(web_add_booking_result);
+    Console.WriteLine(web_search_result);
+    return deserializedObject;
+}
+
+
+// CHALLENGE 2.2 JM+
+// https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
+// Write a semantic function that gets the date and time of the next Manchester United football match. 
+//The function takes as input web search results for the next Manchester United football match.
+async Task<string> GenerateConfirmationEmail(string restaurant_name,
+                                            string booking_date,
+                                            string booking_time,
+                                            int number_of_people,
+                                            string customer_name, 
+                                            string customer_email)
+{
+    var email_body = await kernel.InvokeAsync<string>(prompts["booking_email"],
+    new() {
+            { "restaurant_name", restaurant_name },
+            { "booking_date", booking_date },
+            { "booking_time", booking_time },
+            { "number_of_people", number_of_people },
+            { "customer_name", customer_name}
+        }
+    );
+
+    Console.WriteLine(email_body);
+    return email_body;
+}
+
+// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-native-plugins?pivots=programming-language-csharp
 // Write a native function that calls a REST API (e.g. Bing search) to automatically retrieve the day and time of the next [your favorite team 
 // and sport] game in order to be integrated in the email.
@@ -56,6 +150,7 @@ async Task<string> SearchWebForFootballMatchDateAndTime(string football_team = "
 }
 
 
+// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
 // Write a semantic function that gets the date and time of the next Manchester United football match. 
 //The function takes as input web search results for the next Manchester United football match.
@@ -72,6 +167,7 @@ async Task<string> GetMatchDateAndTime(string web_search_result)
 }
 
 
+// CHALLENGE 2.1
 // https://learn.microsoft.com/en-us/training/modules/create-plugins-semantic-kernel/
 // Write a semantic function that generates an excuse email for your boss to avoid work and watch the next [your favorite team and sport] game. 
 //The function takes as input the day and time of the game, which you provide manually.
@@ -88,8 +184,8 @@ async Task<string> GetExcuseEmail(string day_and_time)
 }
 
 
+// CHALLENGE 2.2
 // https://learn.microsoft.com/en-us/training/modules/guided-project-create-ai-travel-agent/1-introduction
-// Get intent from the user and execute based on functions
 async Task<string> ExecuteWithFunctions()
 {
     var email = string.Empty;
@@ -121,8 +217,9 @@ async Task<string> ExecuteWithFunctions()
 }
 
 
-// https://learn.microsoft.com/en-us/training/modules/use-intelligent-planners/1-introduction
+// CHALLENGE 2.2+
 // Create an execution plan using Intelligent Planners
+// https://learn.microsoft.com/en-us/training/modules/use-intelligent-planners/1-introduction
 async Task<string> ExecuteWithIntelligentPlanners()
 {
     var planner = new HandlebarsPlanner(new HandlebarsPlannerOptions() { AllowLoops = true });
